@@ -294,7 +294,7 @@
         // Nested Data for teams
         var arabTeamsData_groups = d3.flatGroup(arabTeamsData, (d) => d.team);
 
-        console.log(arabTeamsData_groups[0][1][0].team_value);
+        console.log(arabTeamsData[0]);
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -931,7 +931,7 @@
           d3.select("#id-player-name").text(`${player_data.player}`);
           d3.select("#id-player-club").text(
             `${player_data.club} | ${
-              player_data.team_country == "_"
+              player_data.team_country == "-"
                 ? player_data.team_name
                 : player_data.team_country
             }`
@@ -939,7 +939,7 @@
           d3.select("#id-player-position").text(`${player_data.position}`);
           d3.select("#id-player-value").text(
             `Trade value: ${
-              player_data.market_value == "_" ? "NA" : player_data.market_value
+              player_data.market_value == "-" ? "NA" : player_data.market_value
             }`
           );
           d3.select("#id-player-matches").text(
