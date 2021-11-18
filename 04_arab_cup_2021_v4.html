@@ -939,14 +939,14 @@
           d3.select("#id-player-position").text(`${player_data.position}`);
           d3.select("#id-player-value").text(
             `Trade value: ${
-              player_data.market_value == "-" ? "NA" : player_data.market_value
+              player_data.market_value == "-" ? "-" : player_data.market_value
             }`
           );
           d3.select("#id-player-matches").text(
             `International matches: ${player_data.matches}`
           );
           d3.select("#id-player-age").text(
-            `Age: ${player_data.age == 0 ? "NA" : player_data.age}`
+            `Age: ${player_data.age == 0 ? "-" : player_data.age}`
           );
 
           // moving circle
