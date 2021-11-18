@@ -404,6 +404,16 @@
             "Nov",
             "Dec",
           ]);
+
+        // teams arab cup scale
+        const acup_domain = arabCountriesData.map((d, i) => d.team);
+        const acup_range = [
+          1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0,
+        ];
+        const acup_scale = d3
+          .scaleOrdinal()
+          .domain(acup_domain)
+          .range(acup_range);
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // 05. Shapes Creation ////////////////////////////////////////////////////////////////////////////////////////////
@@ -707,7 +717,9 @@
               .attr("cy", 0)
               .attr("r", 15)
               .attr("class", "blue-circle-s")
-              .style("fill", "blue")
+              .style("fill", (d, i) =>
+                acup_scale(d[0]) == 1 ? "blue" : "#ad0043"
+              )
               .style("opacity", 0.3);
 
             d3.select(this)
@@ -716,7 +728,9 @@
               .attr("cy", 0)
               .attr("r", 30)
               .attr("class", "blue-circle-l")
-              .style("fill", "blue")
+              .style("fill", (d, i) =>
+                acup_scale(d[0]) == 1 ? "blue" : "#ad0043"
+              )
               .style("opacity", 0.3);
 
             d3.select(this)
@@ -1078,7 +1092,7 @@
           match_text.style("opacity", 1);
           // text
           d3.select("#id-teams").text(
-            `${match_data.home_team_text} : ${match_data.away_team_text}`
+            `${match_data.home_team_text} - ${match_data.away_team_text}`
           );
           d3.select("#id-scores").text(
             `${match_data.home_score} : ${match_data.away_score}`
