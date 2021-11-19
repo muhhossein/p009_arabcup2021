@@ -96,10 +96,10 @@
         width: window.innerWidth * 0.95,
         height: window.innerHeight * 0.9,
         margin: {
-          top: 50,
-          right: 130,
-          bottom: 50,
-          left: 130,
+          top: 70,
+          right: 150,
+          bottom: 70,
+          left: 150,
         },
       };
 
@@ -510,11 +510,11 @@
         // Position Functions
         const text_position = function (d, i) {
           let x =
-            (radial_scale(group_scale(teams_group_scale(d[0]))) + 115) *
+            (radial_scale(group_scale(teams_group_scale(d[0]))) + 135) *
             Math.cos(angleSlice * teams_group_serial(d[0]) - Math.PI / 2);
 
           let y =
-            (radial_scale(group_scale(teams_group_scale(d[0]))) + 115) *
+            (radial_scale(group_scale(teams_group_scale(d[0]))) + 135) *
             Math.sin(angleSlice * teams_group_serial(d[0]) - Math.PI / 2);
 
           return [x, y];
@@ -580,6 +580,63 @@
         d3.select("#label_Saudi_Arabia")
           .text("Saudi Arabia")
           .attr("transform", "translate(-10,0)");
+        d3.select("#label_Somalia").attr("transform", "translate(-3,0)");
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // 11. Flags ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Position Functions
+        const flag_position = function (d, i) {
+          let x =
+            (radial_scale(group_scale(teams_group_scale(d[0]))) + 100) *
+            Math.cos(angleSlice * teams_group_serial(d[0]) - Math.PI / 2);
+
+          let y =
+            (radial_scale(group_scale(teams_group_scale(d[0]))) + 100) *
+            Math.sin(angleSlice * teams_group_serial(d[0]) - Math.PI / 2);
+
+          return [x, y];
+        };
+
+        // Text Groups
+        let flagGroups = mainGroup
+          .selectAll("g.flag-groups")
+          .data(arabMatchesData_groups)
+          .enter()
+          .append("g")
+          .classed("flag-groups", true)
+          .attr("id", (d) => `${d[0]}_team_txt`)
+          .attr("transform", (d, i) => `translate(${flag_position(d, i)})`)
+          .each(function (d, i) {
+            d3.select(this)
+              .append("circle")
+              .attr("cx", 0)
+              .attr("cy", 0)
+              .attr("r", 15)
+              .style("fill", "black")
+              .style("opacity", 1);
+
+            d3.select(this)
+              .append("circle")
+              .attr("cx", 0)
+              .attr("cy", 0)
+              .attr("r", 12)
+              .style("fill", (d, i) =>
+                acup_scale(d[0]) == 1 ? "blue" : "#ad0043"
+              )
+              .style("opacity", 0.5);
+
+            d3.select(this)
+              .append("image")
+              .attr("x", -12)
+              .attr("y", -12)
+              .attr("width", "24px")
+              .attr("height", "24px")
+              .attr("href", (d) => `flags/${d[0]}.png`)
+              .style("opacity", 0.8);
+          });
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // 06. Matches Circles ////////////////////////////////////////////////////////////////////////////////////////////
@@ -754,27 +811,55 @@
           .style("fill", "#ff0062")
           .style("opacity", 1)
           .each(function (d, i) {
+            // central circle
+            d3.select(this)
+              .append("circle")
+              .attr("cx", 0)
+              .attr("cy", 0)
+              .attr("r", 200)
+              .style("fill", "#00023b")
+              .style("opacity", 0.6);
+
+            d3.select(this)
+              .append("circle")
+              .attr("class", "t-image-circle")
+              .attr("cx", 0)
+              .attr("cy", -250)
+              .attr("r", 50)
+              .style("fill", "blue")
+              .style("opacity", 0.3);
+
+            d3.select(this)
+              .append("image")
+              .attr("id", "t-image")
+              .attr("x", -30)
+              .attr("y", -280)
+              .attr("width", "60px")
+              .attr("height", "60px")
+              .style("opacity", 1)
+              .attr("href", "flags/football.png");
+
             // team ranking
             d3.select(this)
               .append("text")
               .attr("id", "id-team")
-              .attr("y", -170)
+              .attr("y", -160)
               .style("font-size", "24px")
-              .text("Arab Football");
+              .text("");
 
             // team ranking
             d3.select(this)
               .append("text")
               .attr("id", "id-team-ranking")
-              .attr("y", -140)
+              .attr("y", -130)
               .style("font-size", "22px")
-              .text("Teams and players");
+              .text("");
 
             // team confederation
             d3.select(this)
               .append("text")
               .attr("id", "id-confederation-value")
-              .attr("y", -115)
+              .attr("y", -110)
               .style("font-size", "14px")
               .text("");
 
@@ -792,7 +877,7 @@
               .attr("y", -40)
               .style("font-size", "24px")
               .style("fill", "#00eaff")
-              .text("");
+              .text("Hover over each player");
 
             // player club
             d3.select(this)
@@ -801,7 +886,7 @@
               .attr("y", -10)
               .style("font-size", "18px")
               .style("fill", "#00eaff")
-              .text("");
+              .text("to explore all his details");
 
             // player position
             d3.select(this)
@@ -854,7 +939,7 @@
           .style("text-align", "center")
           .style("text-anchor", "middle")
           .style("fill", "grey")
-          .style("opacity", 1)
+          .style("opacity", 0)
           .each(function (d, i) {
             // text
             d3.select(this)
@@ -968,6 +1053,10 @@
           // moving circle
           playerHighlight();
           d3.selectAll(".highlight-circles").style("opacity", 0);
+
+          d3.select("#t-image")
+            .style("opacity", 0.85)
+            .attr("href", `flags/${player_data.team_name}.png`);
 
           // moving_circle
           //   .attr("cx", d3.select(this).node().getBoundingClientRect().x)

@@ -96,10 +96,10 @@
         width: window.innerWidth * 0.95,
         height: window.innerHeight * 0.9,
         margin: {
-          top: 50,
-          right: 120,
-          bottom: 50,
-          left: 120,
+          top: 70,
+          right: 140,
+          bottom: 70,
+          left: 140,
         },
       };
 
@@ -182,6 +182,7 @@
           away_score: +point.away_score,
           match_serial: +point.serial,
           year: +point.year,
+          day: +point.day,
           decade: +point.decade,
           year_n: +point.year_n,
           home_result_desc: point.home_result_desc,
@@ -207,6 +208,7 @@
           match_serial: +point.serial,
           year: +point.year,
           month: +point.month,
+          day: +point.day,
           decade: +point.decade,
           year_n: +point.year_n,
           result_desc: point.result_desc,
@@ -247,7 +249,7 @@
         arabMatchesData = data; //.filter(d => d.country == "China");
         arabMatchesSummary = summary;
 
-        // console.log(arabMatches[0]);
+        console.log(arabMatches[0]);
         // call the draw function
         dataviz();
       }); //end of then method
@@ -691,11 +693,11 @@
         // Position Functions
         const text_position = function (d, i) {
           let x =
-            (radial_scale(group_scale(teams_group_scale(d[0]))) + 115) *
+            (radial_scale(group_scale(teams_group_scale(d[0]))) + 135) *
             Math.cos(angleSlice * teams_group_serial(d[0]) - Math.PI / 2);
 
           let y =
-            (radial_scale(group_scale(teams_group_scale(d[0]))) + 115) *
+            (radial_scale(group_scale(teams_group_scale(d[0]))) + 135) *
             Math.sin(angleSlice * teams_group_serial(d[0]) - Math.PI / 2);
 
           return [x, y];
@@ -761,6 +763,65 @@
         d3.select("#label_Saudi_Arabia")
           .text("Saudi Arabia")
           .attr("transform", "translate(-10,0)");
+        d3.select("#label_Somalia").attr("transform", "translate(-3,0)");
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // 11. Flags ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Position Functions
+        const flag_position = function (d, i) {
+          let x =
+            (radial_scale(group_scale(teams_group_scale(d[0]))) + 100) *
+            Math.cos(angleSlice * teams_group_serial(d[0]) - Math.PI / 2);
+
+          let y =
+            (radial_scale(group_scale(teams_group_scale(d[0]))) + 100) *
+            Math.sin(angleSlice * teams_group_serial(d[0]) - Math.PI / 2);
+
+          return [x, y];
+        };
+
+        // Text Groups
+        let flagGroups = mainGroup
+          .selectAll("g.flag-groups")
+          .data(arabMatchesData_groups)
+          .enter()
+          .append("g")
+          .classed("flag-groups", true)
+          .attr("id", (d) => `${d[0]}_team_txt`)
+          .attr("transform", (d, i) => `translate(${flag_position(d, i)})`)
+          .each(function (d, i) {
+            d3.select(this)
+              .append("circle")
+              .attr("cx", 0)
+              .attr("cy", 0)
+              .attr("r", 15)
+              .style("fill", "black")
+              .style("opacity", 1);
+
+            d3.select(this)
+              .append("circle")
+              .attr("cx", 0)
+              .attr("cy", 0)
+              .attr("r", 12)
+              .style("fill", (d, i) =>
+                acup_scale(d[0]) == 1 ? "blue" : "#ad0043"
+              )
+              .style("opacity", 0.5);
+
+            d3.select(this)
+              .append("image")
+              .attr("x", -12)
+              .attr("y", -12)
+              .attr("width", "24px")
+              .attr("height", "24px")
+              .attr("href", (d) => `flags/${d[0]}.png`)
+              .style("opacity", 0.8);
+          });
+
+        // flagGroups.remove();
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // 11. Central Text ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -830,7 +891,7 @@
           .style("text-align", "center")
           .style("text-anchor", "middle")
           .style("fill", "#ff0062") //ff0062
-          .style("opacity", 0)
+          .style("opacity", 1)
           .each(function (d, i) {
             // central circle
             d3.select(this)
@@ -841,43 +902,79 @@
               .style("fill", "#00023b")
               .style("opacity", 0.3);
 
+            d3.select(this)
+              .append("circle")
+              .attr("id", "t-image-circle")
+              .attr("cx", 0)
+              .attr("cy", -130)
+              .attr("r", 50)
+              .style("fill", "blue")
+              .style("opacity", 0.3);
+
+            d3.select(this)
+              .append("image")
+              .attr("id", "t-image")
+              .attr("x", -30)
+              .attr("y", -160)
+              .attr("width", "60px")
+              .attr("height", "60px")
+              .style("opacity", 1)
+              .attr("href", "flags/football.png");
+
             // team
             d3.select(this)
               .append("text")
               .attr("id", "t-team")
-              .attr("y", -60)
+              .attr("y", -40)
               .style("font-size", "22px")
               .style("fill", "white")
-              .text("Team");
+              .text("Click on country name");
 
             // years
             d3.select(this)
               .append("text")
               .attr("id", "t-years")
-              .attr("y", -30)
+              .attr("y", -10)
               .style("font-size", "18px")
               .style("fill", "white")
-              .text("Years");
+              .text("to explore it in isolation mode");
 
             // total matches line
-
             d3.select(this)
               .append("text")
-              .attr("y", 20)
+              .attr("y", 40)
               .attr("id", "t-matches")
               // .style("fill", "white")
               .style("font-size", "22px")
               .style("opacity", 1)
-              .text("200 Matches");
+              .text("Hover over any match");
 
             d3.select(this)
               .append("text")
-              .attr("y", 50)
+              .attr("y", 70)
               .attr("id", "t-results")
               // .style("fill", "white")
               .style("font-size", "18px")
               .style("opacity", 1)
-              .text("200 Matches");
+              .text("to see more about it");
+
+            d3.select(this)
+              .append("text")
+              .attr("y", 110)
+              .attr("class", "t-info")
+              // .style("fill", "white")
+              .style("font-size", "16px")
+              .style("opacity", 1)
+              .text("Click on any empty space");
+
+            d3.select(this)
+              .append("text")
+              .attr("y", 135)
+              .attr("class", "t-info")
+              // .style("fill", "white")
+              .style("font-size", "16px")
+              .style("opacity", 1)
+              .text("to return to initial view");
           });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -892,7 +989,7 @@
           .style("text-align", "center")
           .style("text-anchor", "middle")
           .style("fill", "grey")
-          .style("opacity", 1)
+          .style("opacity", 0)
           .each(function (d, i) {
             // text
             d3.select(this)
@@ -969,6 +1066,10 @@
           d3.select(`#${selected_team}_team_txt .blue-circle-s`).attr("r", 18);
           d3.select(`#${selected_team}_team_txt .blue-circle-l`).attr("r", 33);
 
+          d3.select("#t-image")
+            .style("opacity", 0.85)
+            .attr("href", `flags/${selected_team}.png`);
+
           // team
           // team text groups
           let team_summary = arabMatchesSummary.filter(
@@ -976,6 +1077,8 @@
           )[0];
 
           team_text.style("opacity", 1);
+          d3.selectAll(".t-info").style("opacity", 0);
+
           d3.select("#t-team").text(`${team_summary.team_text}`);
           d3.select("#t-years").text(
             `${team_summary.start_year} - ${team_summary.end_year}`
@@ -1102,9 +1205,9 @@
           );
           d3.select("#id-tournament").text(`${match_data.tournament}`);
           d3.select("#id-country").text(
-            `${match_data.country} | ${month_scale(match_data.month)} ${
-              match_data.year
-            }`
+            `${match_data.country} | ${match_data.day} ${month_scale(
+              match_data.month
+            )} ${match_data.year}`
           );
           // d3.select("#id-date").text(`${match_data.year}`);
 
@@ -1150,6 +1253,9 @@
             .raise();
 
           match_text.raise();
+
+          team_text.style("opacity", 0);
+          d3.selectAll(".t-info").style("opacity", 0);
         } //end of mouse over
 
         // mouse leave
