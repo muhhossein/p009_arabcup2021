@@ -997,6 +997,8 @@
           let player_serial = d3.select(this).data()[0].serial;
           let player_data = d3.select(this).data()[0];
 
+          console.log(player_data);
+
           team_text.style("opacity", 1);
 
           d3.select(`circle.player_${player_serial}`)
@@ -1055,8 +1057,8 @@
           d3.selectAll(".highlight-circles").style("opacity", 0);
 
           d3.select("#t-image")
-            .style("opacity", 0.85)
-            .attr("href", `flags/${player_data.team_name}.png`);
+            .style("opacity", 0.9)
+            .attr("href", `flags/${player_data.team}.png`);
 
           // moving_circle
           //   .attr("cx", d3.select(this).node().getBoundingClientRect().x)
